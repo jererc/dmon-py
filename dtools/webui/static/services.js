@@ -1,0 +1,68 @@
+$(function() {
+    var interval = null;
+    var overlay_pre = null;
+    var get_log = null;
+
+    function update_log() {
+        overlay_pre.load(get_log);
+        };
+
+    $('a[rel="#log_overlay"]').overlay({
+        mask: '#000',
+        top: 'center',
+        onBeforeLoad: function() {
+            overlay_pre = this.getOverlay().find('.contentWrap');
+            get_log = this.getTrigger().attr('href');
+            overlay_pre.load(get_log);
+
+            interval = window.setInterval( function () { update_log(); }, 2000 );
+            },
+        onClose: function() {
+            window.clearInterval(interval);
+            }
+        });
+    });
+
+$(function() {
+    $('.button').bind('click', function() {
+        var action = this.value;
+        var div = $(this).parents('.content_element')[0];
+        var form = $(this).parents('form').serializeArray();
+        // Add the submit button value
+        form.push({'name': 'action', 'value': action});
+
+        $.getJSON($SCRIPT_ROOT + '/action',
+            form,
+            function(data) {
+                location.reload();
+                });
+        return false;
+        });
+    });
+
+$(function() {
+    $('.img_button[alt!="log"]').bind('click', function() {
+        var action = $(this).attr('alt');
+        var div = $(this).parents('.content_element')[0];
+        var form = $(this).parents('form').serializeArray();
+        // Add the submit button value
+        form.push({'name': 'action', 'value': action});
+
+        if (action == 'edit') {
+            $(div).find('.element_edit').fadeToggle();
+            }
+        else {
+            $.getJSON($SCRIPT_ROOT + '/action',
+                form,
+                function(data) {
+                    if (data.result == 'remove') {
+                        $(div).fadeOut();
+                        }
+                    else {
+                        location.reload();
+                        }
+                    });
+            }
+        return false;
+        });
+    });
