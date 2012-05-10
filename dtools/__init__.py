@@ -21,8 +21,8 @@ RE_PID = re.compile(r'\(pid\s+(\d+)\)')
 logger = logging.getLogger(__name__)
 
 
-class ServiceException(Exception): pass
-class ProcessException(Exception): pass
+class ServiceError(Exception): pass
+class ProcessError(Exception): pass
 
 
 def list():
@@ -68,7 +68,7 @@ def add(name, script=None, user=None, cmd=None, extra=None, max_log_size=100000)
     :param max_log_size: maximum log size
     '''
     if not script and not cmd:
-        raise ServiceException('missing script or command')
+        raise ServiceError('missing script or command')
     if not user:
         user = 'root'
 
@@ -81,7 +81,7 @@ def add(name, script=None, user=None, cmd=None, extra=None, max_log_size=100000)
         try:
             os.makedirs(sv_log_path)
         except Exception, e:
-            raise ServiceException(e)
+            raise ServiceError(e)
 
     # Create log directory
     log_path = os.path.join(LOG_DIR, name)
@@ -89,7 +89,7 @@ def add(name, script=None, user=None, cmd=None, extra=None, max_log_size=100000)
         try:
             os.makedirs(log_path)
         except Exception, e:
-            raise ServiceException(e)
+            raise ServiceError(e)
 
     # Create log symlink
     log_symlink = os.path.join(sv_log_path, 'main')
@@ -112,7 +112,7 @@ def add(name, script=None, user=None, cmd=None, extra=None, max_log_size=100000)
         try:
             os.chmod(file, 0755)
         except OSError, e:
-            raise ServiceException(e)
+            raise ServiceError(e)
 
     # Enable service
     sv_symlink = os.path.join(SERVICE_DIR, name)
@@ -144,7 +144,7 @@ def remove(name):
         try:
             os.remove(sv_symlink)
         except Exception, e:
-            raise ServiceException(e)
+            raise ServiceError(e)
 
     exit(name)
 
@@ -202,7 +202,7 @@ def _popen(cmd):
         stdout, stderr = proc.communicate()
         return_code = proc.returncode
     except Exception, e:
-        raise ProcessException(e)
+        raise ProcessError(e)
     return stdout, stderr, return_code
 
 def _svc_exec(name, arg):
