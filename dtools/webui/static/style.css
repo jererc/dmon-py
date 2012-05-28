@@ -67,6 +67,9 @@ pre {
     padding: 0 16px 0 16px;
     margin: 0;
     }
+.title {
+    width: auto;
+    }
 
 .button {
     width: 70px;

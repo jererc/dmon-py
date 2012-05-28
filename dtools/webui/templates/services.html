@@ -23,7 +23,7 @@
             <div class="element_name">
                 <table>
                     <tr>
-                        <td style="width: auto; color: {% if item.pid %}green{% else %}red{% endif %};">
+                        <td class="title">
                             <b>{{ item.name }}</b>
                         </td>
                         <td class="td_button">
@@ -32,12 +32,8 @@
                         <td class="td_button">
                             <a href="{{ url_for('get_log', name=item.name) }}" rel="#log_overlay"><img class="img_button" src="{{ url_for('static', filename='log.png') }}" alt="log"></img></a>
                         </td>
-                        <td class="td_button">
-                            {% if item.pid %}
-                                <a href=""><img class="img_button" src="{{ url_for('static', filename='stop.png') }}" alt="stop"></img></a>
-                            {% else %}
-                                <a href=""><img class="img_button" src="{{ url_for('static', filename='start.png') }}" alt="start"></img></a>
-                            {% endif %}
+                        <td class="td_button status">
+                            <a href=""><img class="img_button" src="{{ url_for('static', filename='stop.png') }}" alt="stop"></img></a>
                         </td>
                         <td class="td_button">
                             <a href=""><img class="img_button" src="{{ url_for('static', filename='save.png') }}" alt="save"></img></a>

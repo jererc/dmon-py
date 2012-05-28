@@ -1,3 +1,33 @@
+status_interval = window.setInterval( function () { updateStatus(); }, 2000 );
+
+function updateStatus() {
+    $('.content_element').each( function(result) {
+        var title = $(this).find('.title');
+        var img = $(this).find('.status img');
+
+        $.getJSON($SCRIPT_ROOT + '/status',
+            {name: $(this).find('input[name="name"]').val()},
+            function(data) {
+
+                if (data.result) {
+                    title.css('color', 'green');
+                    img.attr('alt', 'stop');
+                    img.attr('src', '/static/stop.png');
+                    }
+                else {
+                    title.css('color', '#555');
+                    img.attr('alt', 'start');
+                    img.attr('src', '/static/start.png');
+                    }
+
+                });
+        });
+    };
+
+$(function() {
+    updateStatus();
+    });
+
 $(function() {
     var interval = null;
     var overlay_pre = null;
@@ -58,7 +88,7 @@ $(function() {
                     if (data.result == 'remove') {
                         $(div).fadeOut();
                         }
-                    else {
+                    else if (data.result == 'add') {
                         location.reload();
                         }
                     });
