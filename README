@@ -1,1 +1,5 @@
-Daemontools library and webui.
+Daemontools library and web UI.
+
+
+Start the webui:
+./run.py
