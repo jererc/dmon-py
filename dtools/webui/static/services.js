@@ -1,5 +1,3 @@
-status_interval = window.setInterval( function () { updateStatus(); }, 2000 );
-
 function updateStatus() {
     $('.content_element').each( function(result) {
         var title = $(this).find('.title');
@@ -26,6 +24,7 @@ function updateStatus() {
 
 $(function() {
     updateStatus();
+    status_interval = window.setInterval(updateStatus, 2000);
     });
 
 $(function() {
@@ -45,7 +44,7 @@ $(function() {
             get_log = this.getTrigger().attr('href');
             overlay_pre.load(get_log);
 
-            interval = window.setInterval( function () { update_log(); }, 2000 );
+            interval = window.setInterval(update_log, 2000);
             },
         onClose: function() {
             window.clearInterval(interval);
