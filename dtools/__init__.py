@@ -1,6 +1,7 @@
 import os
 import re
 import subprocess
+import shutil
 import logging
 
 from tai64n import decode_tai64n
@@ -28,15 +29,14 @@ class ProcessError(Exception): pass
 def list():
     '''Get the list of supervised services.
     '''
-    if not os.path.exists(SERVICE_DIR):
+    if not os.path.exists(SV_DIR):
         return []
-    return os.listdir(SERVICE_DIR)
+    return os.listdir(SV_DIR)
 
 def get_pid(name):
     '''Get the supervised process pid.
     '''
-    sv_path = _get_sv_path(name)
-    stdout, stderr, return_code = _popen(['svstat', sv_path])
+    stdout, stderr, return_code = _popen(['svstat', _get_sv_dir(name)])
     res = RE_PID.search(stdout)
     if res:
         pid = int(res.group(1))
@@ -45,7 +45,7 @@ def get_pid(name):
 def get_log(name, include_time=True):
     '''Get the service log.
     '''
-    log_file = os.path.join(_get_svlog_path(name), 'main/current')
+    log_file = os.path.join(_get_svlog_dir(name), 'main/current')
     with open(log_file) as fd:
         data = fd.read()
     lines = reversed(data.splitlines())
@@ -58,72 +58,73 @@ def get_log(name, include_time=True):
         res.append(log)
     return '\n'.join(res)
 
-def add(name, script=None, user=None, cmd=None, extra=None, max_log_size=100000):
+def add(name, script=None, max_log_size=100000, **kwargs):
     '''Add a service and supervise it.
 
     :param script: script content
-    :param user: user under wich the service must run
-    :param cmd: command to execute
-    :param extra: extra script content placed before the command
     :param max_log_size: maximum log size
+    :param kwargs: extra parameters:
+        - cmd: command to execute
+        - user: user under wich the service must run
+        - extra: extra script content executed before the command
     '''
-    if not script and not cmd:
-        raise ServiceError('missing script or command')
-    if not user:
-        user = 'root'
-
     name = re.sub(r'\W+', '_', name)
 
-    # Create directory in /etc/sv
-    sv_path = _get_sv_path(name)
-    sv_log_path = _get_svlog_path(name)
-    if not os.path.exists(sv_log_path):
-        try:
-            os.makedirs(sv_log_path)
-        except Exception, e:
-            raise ServiceError(e)
-
-    # Create log directory
-    log_path = os.path.join(LOG_DIR, name)
-    if not os.path.exists(log_path):
-        try:
-            os.makedirs(log_path)
-        except Exception, e:
-            raise ServiceError(e)
-
-    # Create log symlink
-    log_symlink = os.path.join(sv_log_path, 'main')
-    if not os.path.exists(log_symlink):
-        os.symlink(log_path, log_symlink)
+    sv_dir = _get_sv_dir(name)
+    if not os.path.exists(sv_dir):
+        makedirs(sv_dir)
 
     # Create service run script
-    sv_run = os.path.join(sv_path, 'run')
-    if cmd:
-        script = SV_SCRIPT % {'extra': extra or '', 'user': user, 'cmd': cmd}
-    with open(sv_run, 'wb') as fd:
+    if not script:
+        if not kwargs.get('cmd'):
+            raise ServiceError('missing script or cmd parameters')
+
+        script = SV_SCRIPT % {
+                'cmd': kwargs.get('cmd'),
+                'user': kwargs.get('user', 'root'),
+                'extra': kwargs.get('extra', ''),
+                }
+    sv_script = _get_sv_script(name)
+    with open(sv_script, 'wb') as fd:
         fd.write(script)
 
+    _set_log(name)
+
     # Create log run script
-    log_run = os.path.join(sv_log_path, 'run')
-    with open(log_run, 'wb') as fd:
+    svlog_script = _get_svlog_script(name)
+    with open(svlog_script, 'wb') as fd:
         fd.write(LOG_SCRIPT % {'max_size': max_log_size})
 
-    for file in (sv_run, log_run,):
+    for file in (sv_script, svlog_script):
         try:
             os.chmod(file, 0755)
         except OSError, e:
             raise ServiceError(e)
 
     # Enable service
-    sv_symlink = os.path.join(SERVICE_DIR, name)
+    sv_symlink = _get_service_symlink(name)
     if not os.path.exists(sv_symlink):
-        os.symlink(sv_path, sv_symlink)
+        os.symlink(sv_dir, sv_symlink)
+
+def _set_log(name):
+    '''Create log directory and service log symlink.
+    '''
+    log_dir = os.path.join(LOG_DIR, name)
+    if not os.path.exists(log_dir):
+        makedirs(log_dir)
+
+    svlog_dir = _get_svlog_dir(name)
+    if not os.path.exists(svlog_dir):
+        makedirs(svlog_dir)
+
+    log_symlink = os.path.join(svlog_dir, 'main')
+    if not os.path.exists(log_symlink):
+        os.symlink(log_dir, log_symlink)
 
 def get(name):
     '''Get the service run script.
     '''
-    sv_run = os.path.join(_get_sv_path(name), 'run')
-    with open(sv_run) as fd:
+    with open(_get_sv_script(name)) as fd:
         res = fd.read()
     return res
 
@@ -131,49 +132,30 @@ def update(name, script):
     '''Update the service run script.
     '''
     stop(name)
-    sv_run = os.path.join(_get_sv_path(name), 'run')
-    with open(sv_run, 'wb') as fd:
+    with open(_get_sv_script(name), 'wb') as fd:
         fd.write(script)
     start(name)
 
-def remove(name):
+def remove(name, remove_log=True):
     '''Remove a service.
     '''
-    sv_symlink = os.path.join(SERVICE_DIR, name)
+    sv_symlink = _get_service_symlink(name)
     if os.path.exists(sv_symlink):
         try:
             os.remove(sv_symlink)
         except Exception, e:
             raise ServiceError(e)
 
+    sv_dir = _get_sv_dir(name)
+    if os.path.exists(sv_dir):
+        rmtree(sv_dir)
+
+    if remove_log:
+        log_dir = os.path.join(LOG_DIR, name)
+        if os.path.exists(log_dir):
+            rmtree(log_dir)
+
     exit(name)
-
-def check_service(name):
-    '''Check the service files and directories.
-    '''
-    sv_path = _get_sv_path(name)
-    sv_log_path = _get_svlog_path(name)
-
-    sv_run = os.path.join(sv_path, 'run')
-    if not os.path.exists(sv_run):
-        return False
-    log_symlink = os.path.join(sv_log_path, 'main')
-    if not os.path.exists(log_symlink):
-        return False
-    sv_symlink = os.path.join(SERVICE_DIR, name)
-    if not os.path.exists(sv_symlink):
-        logger.error('missing service symlink (%s) for service "%s"', log_symlink, name)
-        return False
-    log_symlink = os.path.join(sv_log_path, 'main')
-    if not os.path.exists(log_symlink):
-        logger.error('missing log symlink (%s) for service "%s"', log_symlink, name)
-        return False
-    log_run = os.path.join(sv_log_path, 'run')
-    if not os.path.exists(log_run):
-        logger.error('missing log run script (%s) for service "%s"', log_run, name)
-        return False
-
-    return True
 
 def start(name):
     '''Start the service.
@@ -195,6 +177,11 @@ def kill(name):
     '''
     return _svc_exec(name, '-k')
 
+def _svc_exec(name, arg):
+    cmd = ['svc', arg, _get_sv_dir(name), _get_svlog_dir(name)]
+    if _popen(cmd)[2] == 0:
+        return True
+
 def _popen(cmd):
     stdout, stderr, return_code = None, None, None
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -205,13 +192,29 @@ def _popen(cmd):
         raise ProcessError(e)
     return stdout, stderr, return_code
 
-def _svc_exec(name, arg):
-    cmd = ['svc', arg, _get_sv_path(name), _get_svlog_path(name)]
-    if _popen(cmd)[2] == 0:
-        return True
+def makedirs(dir):
+    try:
+        os.makedirs(dir)
+    except OSError, e:
+        raise ServiceError(e)
 
-def _get_sv_path(name):
+def rmtree(dir):
+    try:
+        shutil.rmtree(dir)
+    except OSError, e:
+        raise ServiceError(e)
+
+def _get_sv_dir(name):
     return os.path.join(SV_DIR, name)
 
-def _get_svlog_path(name):
-    return os.path.join(_get_sv_path(name), 'log')
+def _get_svlog_dir(name):
+    return os.path.join(_get_sv_dir(name), 'log')
+
+def _get_sv_script(name):
+    return os.path.join(_get_sv_dir(name), 'run')
+
+def _get_svlog_script(name):
+    return os.path.join(_get_svlog_dir(name), 'run')
+
+def _get_service_symlink(name):
+    return os.path.join(SERVICE_DIR, name)
