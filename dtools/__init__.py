@@ -2,6 +2,7 @@ import os
 import re
 import subprocess
 import shutil
+import time
 import logging
 
 from tai64n import decode_tai64n
@@ -46,6 +47,9 @@ def get_log(name, include_time=True):
     '''Get the service log.
     '''
     log_file = os.path.join(_get_svlog_dir(name), 'main/current')
+    if not os.path.exists(log_file):
+        return ''
+
     with open(log_file) as fd:
         data = fd.read()
     lines = reversed(data.splitlines())
@@ -84,6 +88,7 @@ def add(name, script=None, max_log_size=100000, **kwargs):
                 'user': kwargs.get('user', 'root'),
                 'extra': kwargs.get('extra', ''),
                 }
+
     sv_script = _get_sv_script(name)
     with open(sv_script, 'wb') as fd:
         fd.write(script)
@@ -95,16 +100,7 @@ def add(name, script=None, max_log_size=100000, **kwargs):
     with open(svlog_script, 'wb') as fd:
         fd.write(LOG_SCRIPT % {'max_size': max_log_size})
 
-    for file in (sv_script, svlog_script):
-        try:
-            os.chmod(file, 0755)
-        except OSError, e:
-            raise ServiceError(e)
-
-    # Enable service
-    sv_symlink = _get_service_symlink(name)
-    if not os.path.exists(sv_symlink):
-        os.symlink(sv_dir, sv_symlink)
+    _set_scripts(name)
 
 def _set_log(name):
     '''Create log directory and service log symlink.
@@ -121,6 +117,18 @@ def _set_log(name):
     if not os.path.exists(log_symlink):
         os.symlink(log_dir, log_symlink)
 
+def _set_scripts(name):
+    for file in (_get_sv_script(name), _get_svlog_script(name)):
+        try:
+            os.chmod(file, 0755)
+        except OSError, e:
+            raise ServiceError('failed to update %s permissions: %s' % (file, e))
+
+    # Enable service
+    sv_symlink = _get_service_symlink(name)
+    if not os.path.exists(sv_symlink):
+        os.symlink(_get_sv_dir(name), sv_symlink)
+
 def get(name):
     '''Get the service run script.
     '''
@@ -136,9 +144,20 @@ def update(name, script):
         fd.write(script)
     start(name)
 
+def _wait_stopped(name):
+    '''Wait for the service to stop to avoid supervise error messages.
+    '''
+    for i in range(10):
+        if not get_pid(name):
+            return True
+        time.sleep(.5)
+
 def remove(name, remove_log=True):
     '''Remove a service.
     '''
+    exit(name)
+    _wait_stopped(name)
+
     sv_symlink = _get_service_symlink(name)
     if os.path.exists(sv_symlink):
         try:
@@ -155,12 +174,19 @@ def remove(name, remove_log=True):
         if os.path.exists(log_dir):
             rmtree(log_dir)
 
-    exit(name)
+def validate(name):
+    try:
+        _set_log(name)
+        _set_scripts(name)
+        return True
+    except ServiceError:
+        pass
 
 def start(name):
     '''Start the service.
     '''
-    return _svc_exec(name, '-u')
+    if validate(name):
+        return _svc_exec(name, '-u')
 
 def stop(name):
     '''Stop the service.
