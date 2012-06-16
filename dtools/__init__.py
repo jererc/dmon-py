@@ -56,10 +56,11 @@ def get_log(name, include_time=True):
 
     res = []
     for line in lines:
-        time, log = line.split(' ', 1)
-        if include_time:
-            log = '%s %s' % (decode_tai64n(time.lstrip('@')).strftime('%Y-%m-%d %H:%M:%S'), log)
-        res.append(log)
+        if line:
+            time, log = line.split(' ', 1)
+            if include_time:
+                log = '%s %s' % (decode_tai64n(time.lstrip('@')).strftime('%Y-%m-%d %H:%M:%S'), log)
+            res.append(log)
     return '\n'.join(res)
 
 def add(name, script=None, max_log_size=100000, **kwargs):
