@@ -5,18 +5,20 @@
 {% endblock %}
 
 {% block content %}
-<div class="content_form">
+<div class="content_form content_color">
     <form>
-        <h2>Add a service</h2>
+        <p class="title">Add a service</p>
         <input type="text" name="name" size="40" value="name" />
-        <button class="button" type="submit" value="add">add</button>
         <br>
-        <textarea wrap="off" name="script">{{ model }}</textarea>
+        <textarea name="script">{{ model }}</textarea>
+        <br>
+        <br>
+        <button class="button" type="submit" value="add">add</button>
     </form>
 </div>
 
 {% for item in items %}
-    <div class="content_element">
+    <div class="content_element content_color">
         <form>
             <input type="hidden" name="name" value="{{ item.name }}" />
 

@@ -3,7 +3,7 @@ html, body {
     margin: 0;
     padding: 0;
     color: #bbb;
-    font: 12px sans-serif;
+    font: 12px helvetica, arial, sans-serif;
     }
 
 html {
@@ -36,7 +36,7 @@ input, select, button, textarea {
     background: #333;
     border: 0;
     color: #888;
-    font: 12px sans-serif;
+    font: 12px helvetica, arial, sans-serif;
     resize: none;
     }
 textarea {
@@ -58,22 +58,25 @@ pre {
     font: 11px monospace;
     }
 
+.title {
+    font-size: 16px;
+    }
+.content_color {
+    background: #272727;
+    }
 .content {
-    background: #262626;
     margin: 0px 140px 0px 140px;
     }
 .content_form {
-    border-top: 3px solid #222;
+    margin: 3px 0 3px 0;
     padding: 16px;
-    margin: 0;
     }
 .content_element {
-    border-top: 3px solid #222;
+    margin: 3px 0 3px 0;
     padding: 0 16px 0 16px;
-    margin: 0;
     }
 .title {
-    font: 16px sans-serif;
+    font-size: 16px;
     width: auto;
     }
 
@@ -104,5 +107,5 @@ pre.contentWrap {
     padding: 0;
     height: 100%;
     width: 100%;
-    font: 10px;
+    font-size: 11px;
     }
