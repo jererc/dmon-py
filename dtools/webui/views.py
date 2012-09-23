@@ -1,7 +1,7 @@
 from flask import jsonify, request, render_template, escape
 
-from dtools.webui import app
 import dtools
+from dtools.webui import app
 
 
 SCRIPT_MODEL = """#!/bin/sh
