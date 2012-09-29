@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='services.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/services.js') }}" type="text/javascript"></script>
 {% endblock %}
 
 {% block content %}
@@ -29,19 +29,19 @@
                             {{ item.name }}
                         </td>
                         <td class="td_button">
-                            <a href=""><img class="img_button" src="{{ url_for('static', filename='edit.png') }}" alt="edit"></img></a>
+                            <a href=""><img class="img_button" src="{{ url_for('static', filename='img/edit.png') }}" alt="edit"></img></a>
                         </td>
                         <td class="td_button">
-                            <a href="{{ url_for('get_log', name=item.name) }}" rel="#log_overlay"><img class="img_button" src="{{ url_for('static', filename='log.png') }}" alt="log"></img></a>
+                            <a href="{{ url_for('get_log', name=item.name) }}" rel="#log_overlay"><img class="img_button" src="{{ url_for('static', filename='img/log.png') }}" alt="log"></img></a>
                         </td>
                         <td class="td_button status">
-                            <a href=""><img class="img_button" src="{{ url_for('static', filename='stop.png') }}" alt="stop"></img></a>
+                            <a href=""><img class="img_button" src="{{ url_for('static', filename='img/stop.png') }}" alt="stop"></img></a>
                         </td>
                         <td class="td_button">
-                            <a href=""><img class="img_button" src="{{ url_for('static', filename='save.png') }}" alt="save"></img></a>
+                            <a href=""><img class="img_button" src="{{ url_for('static', filename='img/save.png') }}" alt="save"></img></a>
                         </td>
                         <td class="td_button">
-                            <a href=""><img class="img_button" src="{{ url_for('static', filename='remove.png') }}" alt="remove"></img></a>
+                            <a href=""><img class="img_button" src="{{ url_for('static', filename='img/remove.png') }}" alt="remove"></img></a>
                         </td>
                     </tr>
                 </table>

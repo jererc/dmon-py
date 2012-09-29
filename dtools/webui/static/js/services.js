@@ -10,12 +10,12 @@ function updateStatus() {
                 if (data.result) {
                     title.css('color', 'green');
                     img.attr('alt', 'stop');
-                    img.attr('src', '/static/stop.png');
+                    img.attr('src', '/static/img/stop.png');
                     }
                 else {
                     title.css('color', '#555');
                     img.attr('alt', 'start');
-                    img.attr('src', '/static/start.png');
+                    img.attr('src', '/static/img/start.png');
                     }
 
                 });
