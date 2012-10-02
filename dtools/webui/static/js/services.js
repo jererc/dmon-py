@@ -37,7 +37,7 @@ $(function() {
         };
 
     $('a[rel="#log_overlay"]').overlay({
-        mask: '#000',
+        mask: 'black',
         top: 'center',
         onBeforeLoad: function() {
             overlay_pre = this.getOverlay().find('.contentWrap');
