@@ -19,7 +19,6 @@ LOG_SCRIPT = """#!/bin/sh
 exec setuidgid root multilog t s%(max_size)s ./main"""
 RE_PID = re.compile(r'\(pid\s+(\d+)\)')
 
-
 logger = logging.getLogger(__name__)
 
 
