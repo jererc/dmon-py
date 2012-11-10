@@ -58,7 +58,10 @@ def get_log(name, include_time=True):
         if line:
             time, log = line.split(' ', 1)
             if include_time:
-                log = '%s %s' % (decode_tai64n(time.lstrip('@')).strftime('%Y-%m-%d %H:%M:%S'), log)
+                if line.startswith('@'):
+                    log = '%s %s' % (decode_tai64n(time.lstrip('@')).strftime('%Y-%m-%d %H:%M:%S'), log)
+                else:
+                    log = line
             res.append(log)
     return '\n'.join(res)
 
