@@ -9,30 +9,6 @@ function handleFocus() {
         });
     };
 
-function updateLog(url) {
-    if (has_focus) {
-        $('.contentWrap').load(url);
-        }
-    };
-
-function initLogOverlay() {
-    var interval = null;
-
-    $('a[rel="#log_overlay"]').overlay({
-        mask: 'black',
-        top: 'center',
-        onBeforeLoad: function() {
-            var get_log_url = this.getTrigger().attr('href');
-            updateLog(get_log_url);
-            interval = window.setInterval(function() { updateLog(get_log_url); }, 5000);
-            },
-        onClose: function() {
-            window.clearInterval(interval);
-            }
-        });
-    };
-
 $(function() {
     handleFocus();
-    initLogOverlay();
     });

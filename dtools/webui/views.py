@@ -18,44 +18,56 @@ def index():
         items.append({
                 'name': name,
                 'script': dtools.get(name),
-                'pid': dtools.get_pid(name),
                 })
-    return render_template('services.html', model=SCRIPT_MODEL, items=items)
+    return render_template('services.html',
+            items=items, model=SCRIPT_MODEL)
 
-@app.route('/action')
-def action():
-    action = request.args.get('action')
+@app.route('/add')
+def add():
+    res = None
     name = request.args.get('name')
-    script = request.args.get('script', '').replace('\r', '')
+    script = '\n'.join(request.args.get('script', '').splitlines())
+    if name and script:
+        dtools.add(name, script=script)
+        res = True
+    return jsonify(result=res)
 
-    if action == 'add':
-        if name and script:
-            dtools.add(name, script=script)
+@app.route('/update')
+def update():
+    res = None
+    name = request.args.get('name')
+    script = '\n'.join(request.args.get('script', '').splitlines())
+    if name and script:
+        dtools.update(name, script=script)
+        res = True
+    return jsonify(result=res)
 
-    elif action == 'save':
-        if name and script:
-            dtools.update(name, script)
-
-    elif action == 'stop':
-        dtools.stop(name)
-        action = 'start'
-
-    elif action == 'start':
-        dtools.start(name)
-        action = 'stop'
-
-    elif action == 'remove':
-        dtools.remove(name)
-
-    return jsonify(result=action)
-
-@app.route('/status')
+@app.route('/get_status')
 def get_status():
     name = request.args.get('name')
     res = dtools.get_pid(name) is not None
     return jsonify(result=res)
 
+@app.route('/set_status')
+def set_status():
+    res = None
+    name = request.args.get('name')
+    action = request.args.get('action')
+    if name and action:
+        getattr(dtools, action)(name)
+        res = True
+    return jsonify(result=res)
+
+@app.route('/remove')
+def remove():
+    res = None
+    name = request.args.get('name')
+    if name:
+        dtools.remove(name)
+        res = True
+    return jsonify(result=res)
+
 @app.route('/get_log/<name>')
 def get_log(name):
-    log = dtools.get_log(name).decode('utf-8')
-    return escape(log)
+    res = dtools.get_log(name)
+    return escape(res.decode('utf-8'))

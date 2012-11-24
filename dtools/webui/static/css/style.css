@@ -4,6 +4,7 @@ html, body {
     padding: 0;
     color: #bbb;
     font: 12px helvetica, arial, sans-serif;
+    font-weight: lighter;
     }
 
 html {
@@ -33,7 +34,7 @@ input, select, button, textarea {
     margin: 2px;
     padding: 2px;
     border-radius: 2px;
-    background: #333;
+    background: #363636;
     border: 0;
     color: #888;
     font: 12px helvetica, arial, sans-serif;
@@ -55,43 +56,75 @@ pre {
     margin: 0;
     padding: 4px;
     overflow: auto;
-    font: 11px monospace;
+    font: 11px "Lucida Console", Monaco, monospace;
     }
 
-.title {
-    font-size: 16px;
+.content {
+    margin: 0px 180px 0px 180px;
     }
-.content_color {
+.content_div {
+    margin-top: 2px;
     background: #272727;
     }
-.content {
-    margin: 0px 140px 0px 140px;
-    }
-.content_form {
-    margin: 3px 0 3px 0;
-    padding: 16px;
-    }
 .content_element {
-    margin: 3px 0 3px 0;
-    padding: 0 16px 0 16px;
+    position: relative;
+    padding: 8px;
     }
-.title {
-    font-size: 16px;
-    width: auto;
+.content_new {
+    background: transparent;
+    padding: 8px;
     }
-
-.button {
-    width: 70px;
+.element_highlight {
+    background: #2d2d2d;
     }
-.button:hover {
-    background-color: #555;
+.element_name {
+    margin-left: 4px;
+    font-size: 18px;
     }
-
-.td_button {
-    width: 1px;
+.element_info, .element_edit, .element_details, .element_new {
+    display: none;
+    padding: 8px;
+    }
+.element_actions {
+    display: none;
+    position: absolute;
+    padding: 8px;
+    right: 4px;
+    top: 0;
+    }
+.save_action {
+    display: none;
+    }
+.element_new_actions {
+    padding: 8px;
+    text-align: center;
     }
 .img_button {
     height: 20px;
+    }
+
+.service_status {
+    display: inline-block;
+    width: 70px;
+    padding: 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 1px rgba(25, 25, 25, 0.7);
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    }
+.service_running {
+    background: green;
+    }
+.service_stopped {
+    background: red;
     }
 
 /* the overlayed element */
@@ -101,8 +134,15 @@ pre {
     width: 90%;
     height: 90%;
     background: black;
+    -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
     }
-pre.contentWrap {
+.log_actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    }
+.contentWrap {
     margin: 0;
     padding: 0;
     height: 100%;

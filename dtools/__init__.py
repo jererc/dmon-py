@@ -125,7 +125,7 @@ def _set_scripts(name):
         try:
             os.chmod(file, 0755)
         except OSError, e:
-            raise ServiceError('failed to update %s permissions: %s' % (file, e))
+            raise ServiceError('failed to update %s permissions: %s' % (file, str(e)))
 
     # Enable service
     sv_symlink = _get_service_symlink(name)
@@ -166,7 +166,7 @@ def remove(name, remove_log=True):
         try:
             os.remove(sv_symlink)
         except Exception, e:
-            raise ServiceError(e)
+            raise ServiceError(str(e))
 
     sv_dir = _get_sv_dir(name)
     if os.path.exists(sv_dir):
@@ -213,25 +213,26 @@ def _svc_exec(name, arg):
 
 def _popen(cmd):
     stdout, stderr, return_code = None, None, None
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen(cmd,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
         stdout, stderr = proc.communicate()
         return_code = proc.returncode
     except Exception, e:
-        raise ProcessError(e)
+        raise ProcessError(str(e))
     return stdout, stderr, return_code
 
 def makedirs(dir):
     try:
         os.makedirs(dir)
     except OSError, e:
-        raise ServiceError(e)
+        raise ServiceError(str(e))
 
 def rmtree(dir):
     try:
         shutil.rmtree(dir)
     except OSError, e:
-        raise ServiceError(e)
+        raise ServiceError(str(e))
 
 def _get_sv_dir(name):
     return os.path.join(SV_DIR, name)
