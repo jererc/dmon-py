@@ -78,7 +78,6 @@ pre {
     background: #2d2d2d;
     }
 .element_name {
-    margin-left: 4px;
     font-size: 18px;
     }
 .element_info, .element_edit, .element_details, .element_new {
@@ -89,8 +88,8 @@ pre {
     display: none;
     position: absolute;
     padding: 8px;
-    right: 4px;
     top: 0;
+    right: 0;
     }
 .save_action {
     display: none;
@@ -106,6 +105,7 @@ pre {
 .service_status {
     display: inline-block;
     width: 70px;
+    margin-right: 4px;
     padding: 2px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
