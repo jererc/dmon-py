@@ -10,6 +10,8 @@
 
     <script src="{{ url_for('static', filename='js/jquery-1.7.2.js') }}" type="text/javascript"></script>
     <script src="{{ url_for('static', filename='js/jquery.tools.min.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/jquery-ui-1.9.2.custom.min.js') }}" type="text/javascript"></script>
+
     <script type=text/javascript>
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     </script>

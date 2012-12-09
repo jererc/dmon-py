@@ -78,7 +78,8 @@ pre {
     background: #2d2d2d;
     }
 .element_name {
-    font-size: 18px;
+    font-size: 16px;
+    vertical-align: bottom;
     }
 .element_info, .element_edit, .element_details, .element_new {
     display: none;
@@ -146,6 +147,13 @@ pre {
     margin: 0;
     padding: 0;
     height: 100%;
+    width: 100%;
+    font-size: 11px;
+    }
+.log {
+    margin: 0;
+    padding: 0;
+    height: 200px;
     width: 100%;
     font-size: 11px;
     }

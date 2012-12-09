@@ -9,11 +9,11 @@ function updateLog(url) {
 function initLogOverlay() {
     var interval = null;
 
-    $('a[rel="#log_overlay"]').overlay({
+    $('div[rel="#log_overlay"]').overlay({
         mask: 'transparent',
         top: 'center',
         onBeforeLoad: function() {
-            var get_log_url = this.getTrigger().attr('href');
+            var get_log_url = this.getTrigger().find('.log_url').val();
             updateLog(get_log_url);
             interval = window.setInterval(function() { updateLog(get_log_url); }, 5000);
             },
@@ -28,19 +28,25 @@ function initActions() {
     $('.content_element').mouseover(function() {
         $(this).addClass('element_highlight');
         $(this).find('.element_actions').show();
+        $(this).find('.element_info').slideDown('fast');
+
+        var get_log_url = $(this).find('.log_url').val();
+        $(this).find('.log').load(get_log_url);
         });
     $('.content_element').mouseleave(function() {
         $(this).removeClass('element_highlight');
         $(this).find('.element_actions').hide();
+        $(this).find('.element_info').slideUp('slow');
         });
 
-    $('.content_new').mouseover(function() {
-        $(this).addClass('element_highlight');
-        $(this).find('.element_new').slideDown('fast');
+    $('.img_button[alt="add"]').mouseover(function() {
+        var content = $(this).parents('.content_new')[0];
+        $(content).addClass('element_highlight', 200);
+        $(content).find('.element_new').slideDown('fast');
         });
     $('.content_new').mouseleave(function() {
-        $(this).find('.element_new').slideUp('fast', function() {
-            $('.content_new').removeClass('element_highlight');
+        $(this).find('.element_new').slideUp('slow', function() {
+            $('.content_new').removeClass('element_highlight', 200);
             });
         });
 

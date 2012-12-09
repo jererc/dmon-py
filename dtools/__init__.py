@@ -51,10 +51,9 @@ def get_log(name, include_time=True):
 
     with open(log_file) as fd:
         data = fd.read()
-    lines = reversed(data.splitlines())
 
     res = []
-    for line in lines:
+    for line in reversed(data.splitlines()):
         if line:
             ts, log = line.split(' ', 1)
             if include_time:

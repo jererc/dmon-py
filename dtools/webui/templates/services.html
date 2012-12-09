@@ -5,28 +5,6 @@
 {% endblock %}
 
 {% block content %}
-{% for item in items %}
-    <div class="content_div content_element">
-        <span class="service_status"></span>
-        <span class="element_name">{{ item.name }}</span>
-
-        <div class="element_actions">
-            <a href="" class="save_action"><img class="img_button" src="{{ url_for('static', filename='img/save.png') }}" alt="update"></img></a>
-            <a href="{{ url_for('get_log', name=item.name) }}" rel="#log_overlay"><img class="img_button" src="{{ url_for('static', filename='img/read.png') }}" alt="read"></img></a>
-            <a href=""><img class="img_button" src="{{ url_for('static', filename='img/edit.png') }}" alt="edit"></img></a>
-            <a href=""><img class="img_button status" src="{{ url_for('static', filename='img/stop.png') }}" alt="stop"></img></a>
-            <a href=""><img class="img_button" src="{{ url_for('static', filename='img/remove.png') }}" alt="remove"></img></a>
-        </div>
-
-        <div class="element_edit">
-            <form>
-                <input type="hidden" name="name" size="40" value="{{ item.name }}" />
-                <textarea name="script">{{ item.script }}</textarea>
-            </form>
-        </div>
-    </div>
-{% endfor %}
-
 <div class="content_div content_new">
     <div class="element_new">
         <form>
@@ -40,4 +18,31 @@
         <a href=""><img class="img_button" src="{{ url_for('static', filename='img/add.png') }}" alt="add"></img></a>
     </div>
 </div>
+
+{% for item in items %}
+    <div class="content_div content_element" rel="#log_overlay">
+        <input type="hidden" name="log_url" value="{{ url_for('get_log', name=item.name) }}" class="log_url" />
+
+        <span class="service_status"></span>
+        <span class="element_name">{{ item.name }}</span>
+
+        <div class="element_actions">
+            <a href="" class="save_action"><img class="img_button" src="{{ url_for('static', filename='img/save.png') }}" alt="update"></img></a>
+            <a href=""><img class="img_button" src="{{ url_for('static', filename='img/edit.png') }}" alt="edit"></img></a>
+            <a href=""><img class="img_button status" src="{{ url_for('static', filename='img/stop.png') }}" alt="stop"></img></a>
+            <a href=""><img class="img_button" src="{{ url_for('static', filename='img/remove.png') }}" alt="remove"></img></a>
+        </div>
+
+        <div class="element_info">
+            <pre class="log"></pre>
+        </div>
+
+        <div class="element_edit">
+            <form>
+                <input type="hidden" name="name" size="40" value="{{ item.name }}" />
+                <textarea name="script">{{ item.script }}</textarea>
+            </form>
+        </div>
+    </div>
+{% endfor %}
 {% endblock %}
