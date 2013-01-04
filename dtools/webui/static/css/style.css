@@ -5,31 +5,31 @@ html, body {
     color: #bbb;
     font: 12px helvetica, arial, sans-serif;
     font-weight: lighter;
-    }
+}
 
 html {
     overflow-y: scroll;
-    }
+}
 
 a, a:link, a:active, a:visited {
     text-decoration: none;
     color: #bbb;
-    }
+}
 a:hover {
     color: #fff;
-    }
+}
 
 table {
     border: 0;
     width: 100%;
     margin: 0;
     padding: 0;
-    }
+}
 
 form {
     margin: 0;
     padding: 0;
-    }
+}
 input, select, button, textarea {
     margin: 2px;
     padding: 2px;
@@ -39,11 +39,11 @@ input, select, button, textarea {
     color: #888;
     font: 12px helvetica, arial, sans-serif;
     resize: none;
-    }
+}
 textarea {
     width: 600px;
     height: 100px;
-    }
+}
 
 pre {
     white-space: pre-wrap; /* css-3 */
@@ -57,51 +57,51 @@ pre {
     padding: 4px;
     overflow: auto;
     font: 11px "Lucida Console", Monaco, monospace;
-    }
+}
 
 .content {
     margin: 0px 180px 0px 180px;
-    }
+}
 .content_div {
     margin-top: 2px;
     background: #272727;
-    }
+}
 .content_element {
     position: relative;
     padding: 8px;
-    }
+}
 .content_new {
     background: transparent;
     padding: 8px;
-    }
+}
 .element_highlight {
     background: #2d2d2d;
-    }
+}
 .element_name {
     font-size: 16px;
     vertical-align: bottom;
-    }
+}
 .element_info, .element_edit, .element_details, .element_new {
     display: none;
     padding: 8px;
-    }
+}
 .element_actions {
     display: none;
     position: absolute;
     padding: 8px;
     top: 0;
     right: 0;
-    }
+}
 .save_action {
     display: none;
-    }
+}
 .element_new_actions {
     padding: 8px;
     text-align: center;
-    }
+}
 .img_button {
     height: 20px;
-    }
+}
 
 .service_status {
     display: inline-block;
@@ -120,13 +120,13 @@ pre {
     text-align: center;
     text-decoration: none;
     color: white;
-    }
+}
 .service_running {
     background: green;
-    }
+}
 .service_stopped {
     background: red;
-    }
+}
 
 /* the overlayed element */
 .log_overlay {
@@ -137,23 +137,23 @@ pre {
     background: black;
     -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-    }
+}
 .log_actions {
     position: absolute;
     top: 8px;
     right: 8px;
-    }
+}
 .contentWrap {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
     font-size: 11px;
-    }
+}
 .log {
     margin: 0;
     padding: 0;
     height: 120px;
     width: 100%;
     font-size: 11px;
-    }
+}

@@ -1,14 +1,14 @@
-var has_focus = true;
+var hasFocus = true;
 
 function handleFocus() {
-    $(window).blur(function(){
-        has_focus = false;
-        });
-    $(window).focus(function(){
-        has_focus = true;
-        });
-    };
+    $(window).blur(function() {
+        hasFocus = false;
+    });
+    $(window).focus(function() {
+        hasFocus = true;
+    });
+};
 
 $(function() {
     handleFocus();
-    });
+});
