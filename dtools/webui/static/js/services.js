@@ -42,7 +42,7 @@ function initActions() {
         clearTimeout(showDelay);
         $(this).removeClass('element_highlight');
         $(this).find('.element_actions').hide();
-        $(this).find('.element_info').slideUp('slow');
+        $(this).find('.element_info').delay(2000).slideUp('slow');
     });
 
     $('.img_button[alt="add"]').mouseenter(function() {
