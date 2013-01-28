@@ -1,50 +1,52 @@
-html, body {
-    background: #222;
-    margin: 0;
-    padding: 0;
-    color: #bbb;
-    font: 12px helvetica, arial, sans-serif;
-    font-weight: lighter;
-}
-
 html {
-    overflow-y: scroll;
+    background-color: #222;
+}
+body {
+    font: 62.5% helvetica, arial, sans-serif;
+    font-weight: lighter;
+    color: #bbb;
+}
+body.extra-wide {
+    font-size: 120%;
+}
+body.wide {
+    font-size: 60%;
+}
+body.narrow {
+    font-size: 40%;
 }
 
 a, a:link, a:active, a:visited {
     text-decoration: none;
+    color: #555;
+}
+a.highlight {
     color: #bbb;
 }
 a:hover {
-    color: #fff;
+    color: white;
 }
 
 table {
-    border: 0;
     width: 100%;
-    margin: 0;
-    padding: 0;
+    border-collapse: collapse; /* 'cellspacing' equivalent */
+}
+table td, table th {
+    padding: .2em 0 .2em 0; /* 'cellpadding' equivalent */
 }
 
-form {
-    margin: 0;
-    padding: 0;
-}
 input, select, button, textarea {
-    margin: 2px;
-    padding: 2px;
-    border-radius: 2px;
-    background: #363636;
+    border-radius: .2em;
+    background-color: #424242;
     border: 0;
     color: #888;
-    font: 12px helvetica, arial, sans-serif;
+    font-size: 1.4em;
+}
+textarea.element-script {
     resize: none;
+    width: 50em;
+    height: 10em;
 }
-textarea {
-    width: 600px;
-    height: 100px;
-}
-
 pre {
     white-space: pre-wrap; /* css-3 */
     white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
@@ -53,107 +55,119 @@ pre {
     word-wrap: break-word; /* Internet Explorer 5.5+ */
     width: 100%;
     height: auto;
-    margin: 0;
-    padding: 4px;
+    padding: .4em;
     overflow: auto;
-    font: 11px "Lucida Console", Monaco, monospace;
+    font: 1.1em "Lucida Console", Monaco, monospace;
 }
 
 .content {
-    margin: 0px 180px 0px 180px;
+    margin: 0 15% 14em 15%;
 }
-.content_div {
-    margin-top: 2px;
-    background: #272727;
+.content-div {
+    margin-top: .2em;
+    background-color: #272727;
 }
-.content_element {
+.content-element {
     position: relative;
-    padding: 8px;
+    padding: .8em;
 }
-.content_new {
-    background: transparent;
-    padding: 8px;
+.content-new {
+    background-color: transparent;
+    padding: .8em;
 }
-.element_highlight {
-    background: #2d2d2d;
+.element-highlight {
+    background-color: #2d2d2d;
 }
-.element_name {
-    font-size: 16px;
+.element-name {
+    font-size: 1.6em;
     vertical-align: bottom;
 }
-.element_info, .element_edit, .element_details, .element_new {
+.element-info, .element-edit, .element-new {
     display: none;
-    padding: 8px;
+    padding: .8em;
 }
-.element_actions {
+.element-log {
+    margin: 0;
+    padding: 0;
+    height: 12em;
+    width: 100%;
+}
+.element-actions {
     display: none;
     position: absolute;
-    padding: 8px;
+    padding: .8em;
     top: 0;
     right: 0;
 }
-.save_action {
+.save-action {
     display: none;
 }
-.element_new_actions {
-    padding: 8px;
+.element-new-actions {
+    padding: .8em;
     text-align: center;
 }
-.img_button {
-    height: 20px;
+.text-title {
+    font-size: 1.6em;
+}
+.text-normal {
+    font-size: 1.4em;
 }
 
-.service_status {
+.default-text {
+    width: 30em;
+}
+.default-text-active {
+    color: #777;
+    font-style: italic;
+}
+
+.img-button {
+    height: 2.4em;
+}
+
+.service-status {
     display: inline-block;
-    width: 70px;
-    margin-right: 4px;
-    padding: 2px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -o-border-radius: 3px;
-    -ms-border-radius: 3px;
-    -khtml-border-radius: 3px;
-    border-radius: 3px;
-    letter-spacing: 1px;
-    text-shadow: 1px 1px 1px rgba(25, 25, 25, 0.7);
+    width: 7em;
+    margin-right: .4em;
+    padding: .2em;
+    -moz-border-radius: .3em;
+    -webkit-border-radius: .3em;
+    -o-border-radius: .3em;
+    -ms-border-radius: .3em;
+    -khtml-border-radius: .3em;
+    border-radius: .3em;
+    letter-spacing: .1em;
+    text-shadow: .1em .1em .1em rgba(25, 25, 25, 0.7);
     font-weight: bold;
     text-align: center;
     text-decoration: none;
+    font-size: 1.4em;
     color: white;
 }
-.service_running {
-    background: green;
+.service-running {
+    background-color: green;
 }
-.service_stopped {
-    background: red;
+.service-stopped {
+    background-color: red;
 }
 
-/* the overlayed element */
-.log_overlay {
+.log-overlay {
     display: none;
-    z-index: 10000;
+    z-index: 9999;
     width: 90%;
     height: 90%;
-    background: black;
-    -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-    -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+    background-color: black;
+    -webkit-box-shadow: 0 0 2em rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 0 2em rgba(0, 0, 0, 0.5);
 }
-.log_actions {
+.log-actions {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: .8em;
+    right: .8em;
 }
-.contentWrap {
+.log-overlay-content {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
-    font-size: 11px;
-}
-.log {
-    margin: 0;
-    padding: 0;
-    height: 120px;
-    width: 100%;
-    font-size: 11px;
 }

@@ -24,13 +24,15 @@ def index():
 
 @app.route('/add')
 def add():
-    res = None
     name = request.args.get('name')
     script = '\n'.join(request.args.get('script', '').splitlines())
-    if name and script:
+    if not name or not script:
+        return jsonify(message='missing field')
+    try:
         dtools.add(name, script=script)
-        res = True
-    return jsonify(result=res)
+    except Exception, e:
+        return jsonify(message=str(e))
+    return jsonify(message=None)
 
 @app.route('/update')
 def update():

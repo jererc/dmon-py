@@ -5,42 +5,45 @@
 {% endblock %}
 
 {% block content %}
-<div class="content_div content_new">
-    <div class="element_new">
+<div class="content-div content-new">
+    <div class="element-new">
         <form>
-            <input type="text" name="name" size="40" value="" />
+            <input class="default-text" type="text" name="name" title="name" />
             <br>
-            <textarea name="script">{{ model }}</textarea>
+            <textarea class="element-script" name="script">{{ model }}</textarea>
         </form>
+
+        <div>
+            <pre class="add-message"></pre>
+        </div>
     </div>
 
-    <div class="element_new_actions">
-        <a href=""><img class="img_button" src="{{ url_for('static', filename='img/add.png') }}" alt="add"></img></a>
+    <div class="element-new-actions">
+        <a href=""><img class="img-button" src="{{ url_for('static', filename='img/add.png') }}" alt="add"></img></a>
     </div>
 </div>
 
 {% for item in items %}
-    <div class="content_div content_element" rel="#log_overlay">
-        <input type="hidden" name="log_url" value="{{ url_for('get_log', name=item.name) }}" class="log_url" />
+    <div class="content-div content-element" data-id="{{ item.name }}">
+        <span class="service-status"></span>
+        <span class="element-name text-title">{{ item.name }}</span>
 
-        <span class="service_status"></span>
-        <span class="element_name">{{ item.name }}</span>
-
-        <div class="element_actions">
-            <a href="" class="save_action"><img class="img_button" src="{{ url_for('static', filename='img/save.png') }}" alt="update"></img></a>
-            <a href=""><img class="img_button" src="{{ url_for('static', filename='img/edit.png') }}" alt="edit"></img></a>
-            <a href=""><img class="img_button status" src="{{ url_for('static', filename='img/stop.png') }}" alt="stop"></img></a>
-            <a href=""><img class="img_button" src="{{ url_for('static', filename='img/remove.png') }}" alt="remove"></img></a>
+        <div class="element-actions">
+            <a href="" class="save-action"><img class="img-button" src="{{ url_for('static', filename='img/save.png') }}" alt="update"></img></a>
+            <a href=""><img class="img-button" src="{{ url_for('static', filename='img/edit.png') }}" alt="edit"></img></a>
+            <a href=""><img class="img-button img-status" src="{{ url_for('static', filename='img/stop.png') }}" alt="stop"></img></a>
+            <a href=""><img class="img-button" src="{{ url_for('static', filename='img/remove.png') }}" alt="remove"></img></a>
         </div>
 
-        <div class="element_info">
-            <pre class="log"></pre>
+        <div class="element-info" rel="#log-overlay">
+            <input type="hidden" name="log-url" value="{{ url_for('get_log', name=item.name) }}" class="log-url" />
+            <pre class="element-log"></pre>
         </div>
 
-        <div class="element_edit">
+        <div class="element-edit">
             <form>
-                <input type="hidden" name="name" size="40" value="{{ item.name }}" />
-                <textarea name="script">{{ item.script }}</textarea>
+                <input type="hidden" name="name" value="{{ item.name }}" />
+                <textarea class="element-script" name="script">{{ item.script }}</textarea>
             </form>
         </div>
     </div>
