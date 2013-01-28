@@ -166,7 +166,7 @@ function initActions() {
     });
 
     $('.img-button[alt="log-action"]').click(function() {
-        updateLogStatus = ! updateLogStatus;
+        updateLogStatus = !updateLogStatus;
         if (updateLogStatus) {
             var file = '/static/img/stop.png';
         } else {

@@ -67,12 +67,12 @@ pre {
     margin-top: .2em;
     background-color: #272727;
 }
-.content-element {
-    position: relative;
-    padding: .8em;
-}
 .content-new {
     background-color: transparent;
+    padding: .8em;
+}
+.content-element {
+    position: relative;
     padding: .8em;
 }
 .element-highlight {
@@ -99,12 +99,12 @@ pre {
     top: 0;
     right: 0;
 }
-.save-action {
-    display: none;
-}
 .element-new-actions {
     padding: .8em;
     text-align: center;
+}
+.save-action {
+    display: none;
 }
 .text-title {
     font-size: 1.6em;
