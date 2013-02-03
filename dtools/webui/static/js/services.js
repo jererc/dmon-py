@@ -61,9 +61,11 @@ function initLogOverlay() {
         mask: 'transparent',
         top: 'center',
         onBeforeLoad: function() {
-            var logUrl = this.getTrigger().find('.log-url').val();
+            var logUrl = this.getTrigger().attr('data-log-url');
             updateLog(logUrl);
-            interval = window.setInterval(function() { updateLog(logUrl); }, 5000);
+            interval = window.setInterval(function() {
+                updateLog(logUrl);
+                }, 5000);
         },
         onClose: function() {
             $('.log-overlay-content').empty();
@@ -83,7 +85,7 @@ function initActions() {
 
     $('.content-element').mouseenter(function() {
         $(this).addClass('element-highlight');
-        var logUrl = $(this).find('.log-url').val();
+        var logUrl = $(this).find('div[rel="#log-overlay"]').attr('data-log-url');
         $(this).find('.element-log').load(logUrl);
         toggleElement(this, 'down', 600);
     });

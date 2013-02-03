@@ -35,8 +35,7 @@
             <a href=""><img class="img-button" src="{{ url_for('static', filename='img/remove.png') }}" alt="remove"></img></a>
         </div>
 
-        <div class="element-info" rel="#log-overlay">
-            <input type="hidden" name="log-url" value="{{ url_for('get_log', name=item.name) }}" class="log-url" />
+        <div class="element-info" rel="#log-overlay" data-log-url="{{ url_for('get_log', name=item.name) }}">
             <pre class="element-log"></pre>
         </div>
 
