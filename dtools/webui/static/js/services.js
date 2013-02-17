@@ -121,7 +121,6 @@ function initActions() {
             form.serializeArray(),
             function(data) {
                 if (data.message) {
-                    initInputFields();
                     $('.add-message').text(data.message);
                 } else {
                     location.reload();
