@@ -33,9 +33,9 @@ input, select, button, textarea {
     color: #888;
     font-size: 1.4em;
 }
-textarea.element-script {
+textarea {
     resize: none;
-    width: 50em;
+    width: 30em;
     height: 10em;
 }
 pre {

@@ -5,20 +5,20 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-div content-new">
-    <div class="element-new">
-        <form>
-            <input class="input-text" type="text" name="name" placeholder="service name" />
-            <br>
-            <textarea class="element-script" name="script">{{ model }}</textarea>
-        </form>
+<div class="content-new-trigger"></div>
 
-        <div>
-            <pre class="add-message"></pre>
-        </div>
+<div class="content-div content-new element-highlight">
+    <form>
+        <input class="input-text" type="text" name="name" placeholder="service name" />
+        <br>
+        <textarea class="element-script" name="script">{{ model }}</textarea>
+    </form>
+
+    <div>
+        <pre class="add-message"></pre>
     </div>
 
-    <div class="element-new-actions">
+    <div class="element-actions-new">
         <a href=""><img class="img-button" src="{{ url_for('static', filename='img/add.png') }}" alt="add"></img></a>
     </div>
 </div>

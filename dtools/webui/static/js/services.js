@@ -1,41 +1,25 @@
-var updateLogStatus = true;
 var showDelays = {};
+var updateLogStatus = true;
 
+
+function toggleElement(id, element, direction, delay) {
+    clearTimeout(showDelays[id]);
+    if (!element) {
+        return false;
+    }
+    showDelays[id] = setTimeout(function() {
+        if (direction == 'up') {
+            element.slideUp(300);
+        } else {
+            element.slideDown(100);
+        }
+    }, delay);
+};
 
 function updateLog(url) {
     if (hasFocus && updateLogStatus) {
         $('.log-overlay-content').load(url);
     }
-};
-
-function toggleElementNew(element, direction, delay) {
-    var id = 'new';
-    clearTimeout(showDelays[id]);
-    var info = $(element).find('.element-new');
-    showDelays[id] = setTimeout(function () {
-        if (direction == 'up') {
-            info.slideUp('slow', function() {
-                $(element).removeClass('element-highlight', 200);
-            });
-        } else {
-            info.slideDown('fast', function() {
-                $(element).addClass('element-highlight');
-            });
-        }
-    }, delay);
-};
-
-function toggleElement(element, direction, delay) {
-    var id = $(element).attr('data-id');
-    clearTimeout(showDelays[id]);
-    var info = $(element).find('.element-info');
-    showDelays[id] = setTimeout(function () {
-        if (direction == 'up') {
-            info.slideUp('slow');
-        } else {
-            info.slideDown('fast');
-        }
-    }, delay);
 };
 
 function setStatus(element, status) {
@@ -75,23 +59,27 @@ function initLogOverlay() {
 };
 
 function initActions() {
-    $('.content-new').mouseenter(function() {
-        $(this).addClass('element-highlight');
-        toggleElementNew(this, 'down', 600);
+    $('.content-new-trigger, .content-new').mouseenter(function() {
+        toggleElement('new', $('.content-new'), 'down', 500);
+    });
+    $('.content-new-trigger').mouseleave(function() {
+        toggleElement('new');
     });
     $('.content-new').mouseleave(function() {
-        toggleElementNew(this, 'up', 600);
+        toggleElement('new', $(this), 'up', 600);
     });
 
     $('.content-element').mouseenter(function() {
         $(this).addClass('element-highlight');
         var logUrl = $(this).find('div[rel="#log-overlay"]').attr('data-log-url');
         $(this).find('.element-log').load(logUrl);
-        toggleElement(this, 'down', 600);
+        toggleElement($(this).attr('data-id'),
+                $(this).find('.element-info'), 'down', 600);
     });
     $('.content-element').mouseleave(function() {
         $(this).removeClass('element-highlight');
-        toggleElement(this, 'up', 2000);
+        toggleElement($(this).attr('data-id'),
+                $(this).find('.element-info'), 'up', 2000);
     });
 
     if (isMobile) {
