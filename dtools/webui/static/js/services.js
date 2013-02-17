@@ -117,12 +117,6 @@ function initActions() {
     $('.img-button[alt="add"]').click(function() {
         var div = $(this).parents('.content-new')[0];
         var form = $(div).find('form');
-        form.find('.default-text').each(function() {
-            if ($(this).val() == this.title) {
-                $(this).val("");
-            }
-        });
-
         $.getJSON($SCRIPT_ROOT + '/add',
             form.serializeArray(),
             function(data) {

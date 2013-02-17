@@ -1,0 +1,69 @@
+html {
+    background-color: #222;
+}
+body {
+    font: 62.5% helvetica, arial, sans-serif;
+    font-weight: lighter;
+    color: #bbb;
+}
+
+a, a:link, a:active, a:visited {
+    text-decoration: none;
+    color: #555;
+}
+a.highlight {
+    color: #bbb;
+}
+a:hover {
+    color: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* 'cellspacing' equivalent */
+}
+table td, table th {
+    padding: .2em 0 .2em 0; /* 'cellpadding' equivalent */
+}
+
+input, select, button, textarea {
+    border-radius: .2em;
+    background-color: #424242;
+    border: 0;
+    color: #888;
+    font-size: 1.4em;
+}
+textarea.element-script {
+    resize: none;
+    width: 50em;
+    height: 10em;
+}
+pre {
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+    width: 100%;
+    height: auto;
+    padding: .4em;
+    overflow: auto;
+    font: 1.1em "Lucida Console", Monaco, monospace;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: #777;
+    font-style: italic;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #777;
+    font-style: italic;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #777;
+    font-style: italic;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #777;
+    font-style: italic;
+}
