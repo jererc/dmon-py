@@ -4,8 +4,8 @@ import os
 
 from systools.system import popen, webapp
 
-from dtools import settings
-from dtools.webui import app
+from dmon import settings
+from dmon.apps import app
 
 
 CMDS = ['svscan', 'svstat', 'svc']
@@ -23,11 +23,10 @@ def check_requirements():
 def main():
     if not check_requirements():
         sys.exit(1)
-
     if os.geteuid() != 0:
         sys.exit('must run as root')
 
-    webapp.run(app, host='0.0.0.0', port=settings.WEBUI_PORT)
+    webapp.run(app, host='0.0.0.0', port=settings.API_PORT)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,5 @@
-PACKAGE_NAME = 'dtools'
-
-WEBUI_PORT = 8001
+PACKAGE_NAME = 'dmon'
+API_PORT = 9001
 
 
 # Import local settings

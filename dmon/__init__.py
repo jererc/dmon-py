@@ -26,6 +26,46 @@ class ServiceError(Exception): pass
 class ProcessError(Exception): pass
 
 
+def add(name, script=None, max_log_size=100000, **kwargs):
+    '''Add a service and supervise it.
+
+    :param script: script content
+    :param max_log_size: maximum log size
+    :param kwargs: extra parameters:
+        - cmd: command to execute
+        - user: user under wich the service must run
+        - extra: extra script content executed before the command
+    '''
+    name = re.sub(r'\W+', '_', name)
+
+    sv_dir = _get_sv_dir(name)
+    if not os.path.exists(sv_dir):
+        makedirs(sv_dir)
+
+    # Create service run script
+    if not script:
+        if not kwargs.get('cmd'):
+            raise ServiceError('missing script or cmd parameters')
+
+        script = SV_SCRIPT % {
+                'cmd': kwargs['cmd'],
+                'user': kwargs.get('user', 'root'),
+                'extra': kwargs.get('extra', ''),
+                }
+
+    sv_script = _get_sv_script(name)
+    with open(sv_script, 'wb') as fd:
+        fd.write(script)
+
+    _set_log(name)
+
+    # Create log run script
+    svlog_script = _get_svlog_script(name)
+    with open(svlog_script, 'wb') as fd:
+        fd.write(LOG_SCRIPT % {'max_size': max_log_size})
+
+    _set_scripts(name)
+
 def list():
     '''Get the list of supervised services.
     '''
@@ -33,14 +73,23 @@ def list():
         return []
     return os.listdir(SV_DIR)
 
+def get(name):
+    '''Get the service run script.
+    '''
+    file_script = _get_sv_script(name)
+    if not os.path.exists(file_script):
+        return ''
+
+    with open(file_script) as fd:
+        res = fd.read()
+    return res
+
 def get_pid(name):
     '''Get the supervised process pid.
     '''
     stdout, stderr, return_code = _popen(['svstat', _get_sv_dir(name)])
     res = RE_PID.search(stdout)
-    if res:
-        pid = int(res.group(1))
-        return pid
+    return int(res.group(1)) if res else None
 
 def get_log(name, include_time=True):
     '''Get the service log.
@@ -64,95 +113,16 @@ def get_log(name, include_time=True):
             res.append(log)
     return '\n'.join(res)
 
-def add(name, script=None, max_log_size=100000, **kwargs):
-    '''Add a service and supervise it.
-
-    :param script: script content
-    :param max_log_size: maximum log size
-    :param kwargs: extra parameters:
-        - cmd: command to execute
-        - user: user under wich the service must run
-        - extra: extra script content executed before the command
-    '''
-    name = re.sub(r'\W+', '_', name)
-
-    sv_dir = _get_sv_dir(name)
-    if not os.path.exists(sv_dir):
-        makedirs(sv_dir)
-
-    # Create service run script
-    if not script:
-        if not kwargs.get('cmd'):
-            raise ServiceError('missing script or cmd parameters')
-
-        script = SV_SCRIPT % {
-                'cmd': kwargs.get('cmd'),
-                'user': kwargs.get('user', 'root'),
-                'extra': kwargs.get('extra', ''),
-                }
-
-    sv_script = _get_sv_script(name)
-    with open(sv_script, 'wb') as fd:
-        fd.write(script)
-
-    _set_log(name)
-
-    # Create log run script
-    svlog_script = _get_svlog_script(name)
-    with open(svlog_script, 'wb') as fd:
-        fd.write(LOG_SCRIPT % {'max_size': max_log_size})
-
-    _set_scripts(name)
-
-def _set_log(name):
-    '''Create log directory and service log symlink.
-    '''
-    log_dir = os.path.join(LOG_DIR, name)
-    if not os.path.exists(log_dir):
-        makedirs(log_dir)
-
-    svlog_dir = _get_svlog_dir(name)
-    if not os.path.exists(svlog_dir):
-        makedirs(svlog_dir)
-
-    log_symlink = os.path.join(svlog_dir, 'main')
-    if not os.path.exists(log_symlink):
-        os.symlink(log_dir, log_symlink)
-
-def _set_scripts(name):
-    for file in (_get_sv_script(name), _get_svlog_script(name)):
-        try:
-            os.chmod(file, 0755)
-        except OSError, e:
-            raise ServiceError('failed to update %s permissions: %s' % (file, str(e)))
-
-    # Enable service
-    sv_symlink = _get_service_symlink(name)
-    if not os.path.exists(sv_symlink):
-        os.symlink(_get_sv_dir(name), sv_symlink)
-
-def get(name):
-    '''Get the service run script.
-    '''
-    with open(_get_sv_script(name)) as fd:
-        res = fd.read()
-    return res
-
 def update(name, script):
     '''Update the service run script.
     '''
-    stop(name)
+    up = get_pid(name) is not None
+    if up:
+        stop(name)
     with open(_get_sv_script(name), 'wb') as fd:
         fd.write(script)
-    start(name)
-
-def _wait_stopped(name):
-    '''Wait for the service to stop to avoid supervise error messages.
-    '''
-    for i in range(10):
-        if not get_pid(name):
-            return True
-        time.sleep(.5)
+    if up:
+        start(name)
 
 def remove(name, remove_log=True):
     '''Remove a service.
@@ -205,6 +175,40 @@ def kill(name):
     '''
     return _svc_exec(name, '-k')
 
+def _set_log(name):
+    '''Create log directory and service log symlink.
+    '''
+    log_dir = os.path.join(LOG_DIR, name)
+    if not os.path.exists(log_dir):
+        makedirs(log_dir)
+
+    svlog_dir = _get_svlog_dir(name)
+    if not os.path.exists(svlog_dir):
+        makedirs(svlog_dir)
+
+    log_symlink = os.path.join(svlog_dir, 'main')
+    if not os.path.exists(log_symlink):
+        os.symlink(log_dir, log_symlink)
+
+def _set_scripts(name):
+    for file in (_get_sv_script(name), _get_svlog_script(name)):
+        try:
+            os.chmod(file, 0755)
+        except OSError, e:
+            raise ServiceError('failed to update %s permissions: %s' % (file, str(e)))
+
+    # Enable service
+    sv_symlink = _get_service_symlink(name)
+    if not os.path.exists(sv_symlink):
+        os.symlink(_get_sv_dir(name), sv_symlink)
+
+def _wait_stopped(name):
+    '''Wait for the service to stop to avoid supervise error messages.
+    '''
+    for i in range(10):
+        if not get_pid(name):
+            return True
+        time.sleep(.5)
 def _svc_exec(name, arg):
     cmd = ['svc', arg, _get_sv_dir(name), _get_svlog_dir(name)]
     if _popen(cmd)[2] == 0:
