@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import sys
 import os
+import logging
 
-from systools.system import popen, webapp
+from systools.system import check_commands, webapp
 
 from dmon import settings
 from dmon.apps import app
@@ -10,18 +11,11 @@ from dmon.apps import app
 
 CMDS = ['svscan', 'svstat', 'svc']
 
+logging.basicConfig(level=logging.DEBUG)
 
-def check_requirements():
-    res = True
-    for cmd in CMDS:
-        if popen('which %s' % cmd)[-1] != 0:
-            res = False
-            print '%s is missing' % cmd
-
-    return res
 
 def main():
-    if not check_requirements():
+    if not check_commands(CMDS):
         sys.exit(1)
     if os.geteuid() != 0:
         sys.exit('must run as root')

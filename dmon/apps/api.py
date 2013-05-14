@@ -11,7 +11,7 @@ from dmon.apps import app
 def check_status():
     return jsonify(result='dmon')
 
-@app.route('/services/create', methods=['POST', 'OPTIONS'])
+@app.route('/service/create', methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*')
 def create_service():
     data = request.json
@@ -27,7 +27,7 @@ def create_service():
         return jsonify(error=str(e))
     return jsonify(result=True)
 
-@app.route('/services/list', methods=['GET'])
+@app.route('/service/list', methods=['GET'])
 @crossdomain(origin='*')
 def list_services():
     items = []
@@ -39,7 +39,7 @@ def list_services():
                 })
     return serialize({'result': items})
 
-@app.route('/services/log', methods=['POST', 'OPTIONS'])
+@app.route('/service/log', methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*')
 def get_service_log():
     data = request.json
@@ -49,7 +49,7 @@ def get_service_log():
     res = dmon.get_log(data['name']).decode('utf-8')
     return jsonify(result=res)
 
-@app.route('/services/update', methods=['POST', 'OPTIONS'])
+@app.route('/service/update', methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*')
 def update_service():
     data = request.json
@@ -62,7 +62,7 @@ def update_service():
     dmon.update(data['name'], script=script)
     return jsonify(result=True)
 
-@app.route('/services/process', methods=['POST', 'OPTIONS'])
+@app.route('/service/process', methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*')
 def process_service():
     data = request.json
@@ -77,7 +77,7 @@ def process_service():
     callable(data['name'])
     return jsonify(result=True)
 
-@app.route('/services/remove', methods=['POST', 'OPTIONS'])
+@app.route('/service/remove', methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*')
 def remove_service():
     data = request.json

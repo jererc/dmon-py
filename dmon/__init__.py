@@ -152,7 +152,7 @@ def validate(name):
         _set_scripts(name)
         return True
     except ServiceError:
-        pass
+        return False
 
 def start(name):
     '''Start the service.
