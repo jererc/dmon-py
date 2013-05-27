@@ -15,10 +15,11 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 def main():
+    if os.geteuid() != 0:
+        print 'must run as root'
+        sys.exit(1)
     if not check_commands(CMDS):
         sys.exit(1)
-    if os.geteuid() != 0:
-        sys.exit('must run as root')
 
     webapp.run(app, host='0.0.0.0', port=settings.API_PORT)
 
