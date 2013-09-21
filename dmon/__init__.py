@@ -157,8 +157,9 @@ def validate(name):
 def start(name):
     '''Start the service.
     '''
-    if validate(name):
-        return _svc_exec(name, '-u')
+    if not validate(name):
+        return False
+    return _svc_exec(name, '-u')
 
 def stop(name):
     '''Stop the service.
@@ -212,8 +213,7 @@ def _wait_stopped(name):
 
 def _svc_exec(name, arg):
     cmd = ['svc', arg, _get_sv_dir(name), _get_svlog_dir(name)]
-    if _popen(cmd)[2] == 0:
-        return True
+    return _popen(cmd)[2] == 0
 
 def _popen(cmd):
     stdout, stderr, return_code = None, None, None
