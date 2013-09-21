@@ -209,6 +209,7 @@ def _wait_stopped(name):
         if not get_pid(name):
             return True
         time.sleep(.5)
+
 def _svc_exec(name, arg):
     cmd = ['svc', arg, _get_sv_dir(name), _get_svlog_dir(name)]
     if _popen(cmd)[2] == 0:
